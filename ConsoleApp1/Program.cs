@@ -17,6 +17,16 @@ namespace ConsoleApp1
             Scale = scale;
         }
 
+        public void setTemp (double temp)
+        {
+            Temp = temp;
+        }
+
+        public void setHumid (int humid)
+        {
+            Humid = humid;
+        }
+
         public bool CheckValidTemp()
         {
             if (Scale == "C")
@@ -119,15 +129,41 @@ namespace ConsoleApp1
 
             while (loopTwo)
             {
+                // Get weather data from user
                 Console.WriteLine("\nEnter Weather info - ");
-                Console.Write("Enter temp Scale: ");
+                Console.Write("Enter temp Scale (C / F): ");
                 string setScale = Console.ReadLine();
                 Console.Write("Enter Temp: ");
                 double setTemp = double.Parse(Console.ReadLine());
                 Console.Write("Enter Humidity: ");
                 int setHumid = int.Parse(Console.ReadLine());
 
-                WeatherData weatherData = new WeatherData(setTemp, setHumid, setScale);
+                // Create new object with data
+                WeatherData weatherData = new WeatherData(setTemp, setHumid, setScale.ToUpper());
+
+                // Validate correct information
+                while (!weatherData.CheckValidTemp())
+                {
+                    Console.Write("Enter new Temp: ");
+                    double newTemp = double.Parse(Console.ReadLine());
+                    weatherData.setTemp(newTemp);
+                }
+                while (!weatherData.CheckValidHumidity())
+                {
+                    Console.Write("Enter new Humidity: ");
+                    int newHumid = int.Parse(Console.ReadLine());
+                    weatherData.setHumid(newHumid);
+                }
+
+                Console.Write($"\nTemp: {weatherData.Temp}{weatherData.Scale} Humidity: {weatherData.Humid}\n" +
+                    $"Repeat (Enter) or quit (Q)?: ");
+                string choice = Console.ReadLine();
+
+                if (choice.ToLower() == "q")
+                {
+                    Console.WriteLine("\nBye!");
+                    loopTwo = false;
+                }
             }
         }
     }
